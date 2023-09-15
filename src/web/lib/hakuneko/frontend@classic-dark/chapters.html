@@ -401,7 +401,8 @@
                 chapterList = chapterList.filter( ( chapter ) => {
                     return ( chapter.status === 'available' );
                 });
-                if( chapterList.length > 0 && await confirm( 'Download ' + chapterList.length + ' new chapter(s) from the current chapter list?' ) ) {
+                //if( chapterList.length > 0 && await confirm( 'Download ' + chapterList.length + ' new chapter(s) from the current chapter list?' ) ) {
+                if( chapterList.length > 0 ) {
                     chapterList.forEach( ( chapter ) => {
                         Engine.DownloadManager.addDownload( chapter );
                     });
