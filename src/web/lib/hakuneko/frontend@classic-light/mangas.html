@@ -95,6 +95,9 @@
                         <i class="fas fa-fw fa-paste button" on-click="onPasteClick" title="Click to paste manga links from the clipboard (CTRL + V)"></i>
                     </td>
                     <td width="1">
+                        <i class="fas fa-fw fa-sync button" on-click="UpdateMangaFromEveryConnector" title="Click to sync every connecteor manga list"></i>
+                    </td>
+                    <td width="1">
                         <i class="fas fa-fw fa-download button" on-click="onDownloadMangasClick" title="Click to download all chapters currently available for all mangas shown in the filtered and sorted list"></i>
                     </td>
                 </tr>
@@ -249,6 +252,21 @@
                 } );
                 // trigger update for refresh button style (update started)
                 this.notifyPath( 'selectedConnector.isUpdating' );
+            }
+
+            /**
+             * Event listener attached to the corresponding refresh button element.
+             */
+             async UpdateMangaFromEveryConnector() {
+                for (let index in Engine._connectors._list) {
+                    let connector = Engine._connectors._list[index];
+                    console.log('Update Mangas from connector ' + connector.label )
+                    await connector.updateMangas( ( error, mangas ) => {
+                        if( error ) {
+                            console.log('### Error : Failed to update manga list for ' + connector.label + ' : ' + error.message);
+                        }
+                    });
+                }
             }
 
             /**

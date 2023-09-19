@@ -95,6 +95,9 @@
                         <i class="fas fa-fw fa-paste button" on-click="onPasteClick" title="Click to paste manga links from the clipboard (CTRL + V)"></i>
                     </td>
                     <td width="1">
+                        <i class="fas fa-fw fa-sync button" on-click="UpdateMangaFromEveryConnector" title="Click to sync every connecteor manga list"></i>
+                    </td>
+                    <td width="1">
                         <i class="fas fa-fw fa-download button" on-click="onDownloadMangasClick" title="Click to download all chapters currently available for all mangas shown in the filtered and sorted list"></i>
                     </td>
                 </tr>
@@ -252,6 +255,21 @@
             }
 
             /**
+             * Event listener attached to the corresponding refresh button element.
+             */
+             UpdateMangaFromEveryConnector() {
+                for (index in Engine.Connectors) {
+                    let connector = Engine.Connectors[index];
+                    console.log('Update Mangas from connector ' + connector.label )
+                    connector.updateMangas( ( error, mangas ) => {
+                        if( error ) {
+                            console.log('### Error : Failed to update manga list for ' + connector.label + ' : ' + error.message);
+                        }
+                    });
+                }
+            }
+
+            /**
              * For all visible manga (filtered), add all their availble chapters currently to the download manager
              */
             async onDownloadMangasClick( e ) {
@@ -270,7 +288,7 @@
                             for (var index in manga.chapterCache) {
                                 let chapter = manga.chapterCache[index]
                                 if (chapter.status === "available") {
-                                    this._downloadManager.addDownload( chapter );
+                                    Engine._downloadManager.addDownload( chapter );
                                 }
                             }
                         })
