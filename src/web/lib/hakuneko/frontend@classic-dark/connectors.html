@@ -191,11 +191,11 @@
                     </div>
                     <div class="scroll">
                         <template is="dom-repeat" items="[[ connectorList ]]" filter="[[ filterConnectors(connectorPattern, selectedTags) ]]">
-                            <div class$="card [[ getConnectorClass(selectedConnector, item) ]]" title$="Click to show mangas from this website&#10;&#10;Label: [[ item.label ]]&#10;ID: [[ item.id ]]&#10;URL: [[ item.url ]]" on-click="selectConnector">
+                            <div class$="card [[ getConnectorHasCacheClass(item) ]] [[ getConnectorClass(selectedConnector, item) ]]" title$="Click to show mangas from this website&#10;&#10;Label: [[ item.label ]]&#10;ID: [[ item.id ]]&#10;URL: [[ item.url ]]" on-click="selectConnector">
                                 <img class="icon" src$="[[ item.icon ]]" onerror="this.src='/img/connectors/default';" />
                                 <div class="description">
                                     <div class="heading">
-                                        <div class="title">[[ item.label ]]</div>
+                                        <div class="title">[[ item.label ]] [[ getConnectorNbOfMangas(item) ]]</div>
                                         <div class="control">
                                             <i class$="fas fa-sign-in-alt link [[ getLoginClass(item.links) ]]" title="Click to open the login page" on-click="openLogin"></i>
                                             <i class$="fas fa-coffee link [[ getDonationClass(item.links) ]]" title="Click to open the donation page" on-click="openDonation"></i>
@@ -252,6 +252,7 @@
                 this.set( 'connectorList', Engine.Connectors );
                 this.tags = this.getAvailableTags();
                 this.selectedTags = [];
+                this.connectorManageList = {};
             }
 
             /**
@@ -283,6 +284,15 @@
              */
             showPopup() {
                 //this.clearFilters();
+                // Udpate connector information
+                for ( let index in Engine._connectors._list) {
+                    let connector = Engine._connectors._list[index]
+                    let connector_file = Engine._storage.config + 'mangas.' + connector.id
+                    if (Engine._storage.fs.existsSync(connector_file)){
+                        let mangalist = JSON.parse(Engine._storage.fs.readFileSync(Engine._storage.config + 'mangas.' + connector.id))
+                        this.connectorManageList[connector.id] = mangalist
+                    }
+                }
                 this.set( 'popupVisibility', true );
                 //this.set( 'connectorPattern', '' );
                 this.$.connectorPattern.select();
@@ -409,6 +419,14 @@
                 this.set( 'mangaPattern', '' );
                 this.set( 'connectorPattern', '' );
                 this.set( 'selectedTags', [] );
+            }
+
+            getConnectorNbOfMangas( connector ) {
+                return connector.id in this.connectorManageList ? "(" + this.connectorManageList[connector.id].length + ")" : ""
+            }
+
+            getConnectorHasCacheClass( connector ) {
+                return connector.id in this.connectorManageList ? "cardSelected" : ""
             }
 
             /**
