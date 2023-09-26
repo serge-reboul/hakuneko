@@ -107,7 +107,7 @@
              openWebsite(evt) {
                 let link = this.getMangaUrl(this.selectedManga)
                 if(link) {
-                    let popup = window.open(link, link, 'frame=true,nodeIntegration=no');
+                    let popup = window.open(link, this.selectedManga, 'frame=true,nodeIntegration=no');
                     // enable replaceAll only available in later chrome version
                     popup.eval('String.prototype.replaceAll = function (search, replaceWith) { return this.split(search).join(replaceWith) }');
                     // disable onbeforeunload periodically (in case of navigation) to prevent blocking window close
