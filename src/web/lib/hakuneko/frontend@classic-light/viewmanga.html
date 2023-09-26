@@ -7,7 +7,7 @@
     <template>
         <style include="theme"></style>
         <style>
-            #container {
+            .container {
                 width: calc(100% - 2em);
                 height: calc(100% - 2em);
                 padding: 1em;
@@ -16,32 +16,52 @@
                 background-size: cover;
                 background-repeat: no-repeat;
                 background-position: left top;
-                font-size: 1.25em;
-                
+
                 display: flex;
                 flex-direction: column;
             }
-
             .show {
                 display: block ;
             }
             .hide {
                 display: none;
             }
-            h1 {
-                font-size:1.5em;
-                margin-top:0;
-                margin-bottom:0;
-                vertical-align:center;
+            .controls {
+                flex: 0;
             }
-            h3 {
-                margin-bottom:0.1em;
+            .link {
+                margin-left: 0.5em;
             }
-            .iframe-sytyle { flex-grow: 1; border: none; margin: 0; padding: 0; }
+            .heading {
+                display: flex;
+                flex-direction: row;
+                flex: 0;
+                margin-bottom: 0.25em;
+                border-bottom: var(--connector-title-border);
+            }
+            .title {
+                flex: 1;
+                font-size: 1.25em;
+                font-weight: bold;
+            }
+            .subtitle {
+                flex: 1;
+                font-size: 1.0em;
+            }
+            .iframe-sytyle { flex-grow: 1;  margin: 0; padding: 0; }
         </style>
-        <div id="container">
-            <h3>[[ selectedManga.title]] from [[ selectedManga.connector.label ]]</h3>
+        <div class="heading">
+            <div class="control">
+                <i class="fas fa-external-link-square-alt link active" title="Click to open the website in a new window" on-click="openWebsite"></i>
+            </div>
+            &nbsp;
+            <div class="title"> [[ selectedManga.title ]]</div>
+            <div class="subtitle"> from [[ selectedManga.connector.label ]]</div>
+        </div>
+        <div id="iframe" class="container">
             <iframe src="[[ getMangaUrl(selectedManga) ]]" class="iframe-sytyle"></iframe>
+        </div>
+        <div id="container" class="container">
         </div>
     </template>
 
@@ -80,6 +100,29 @@
                 console.log(manga)
                 return manga.connector.getMangaUrl(manga)
             }
+
+            /**
+             *
+             */
+             openWebsite(evt) {
+                let link = this.getMangaUrl(this.selectedManga)
+                if(link) {
+                    let popup = window.open(link, link, 'frame=true,nodeIntegration=no');
+                    // enable replaceAll only available in later chrome version
+                    popup.eval('String.prototype.replaceAll = function (search, replaceWith) { return this.split(search).join(replaceWith) }');
+                    // disable onbeforeunload periodically (in case of navigation) to prevent blocking window close
+                    let watchdog = setInterval(() => {
+                        if(popup.closed) {
+                            clearInterval(watchdog);
+                        } else {
+                            popup.eval(`window.onbeforeunload = evt => undefined;`);
+                        }
+                    }, 500);
+                }
+                evt.cancelBubble = true;
+                evt.stopPropagation();
+            }
+
 
         }
 

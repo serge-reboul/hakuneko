@@ -259,11 +259,11 @@
             /**
              * Event listener attached to the corresponding refresh button element.
              */
-             UpdateMangaFromEveryConnector() {
-                for (index in Engine.Connectors) {
-                    let connector = Engine.Connectors[index];
+             async UpdateMangaFromEveryConnector() {
+                for (let index in Engine._connectors._list) {
+                    let connector = Engine._connectors._list[index];
                     console.log('Update Mangas from connector ' + connector.label )
-                    connector.updateMangas( ( error, mangas ) => {
+                    await connector.updateMangas( ( error, mangas ) => {
                         if( error ) {
                             console.log('### Error : Failed to update manga list for ' + connector.label + ' : ' + error.message);
                         }
