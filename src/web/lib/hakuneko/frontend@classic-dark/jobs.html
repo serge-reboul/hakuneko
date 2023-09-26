@@ -40,7 +40,7 @@
                 color: var(--job-list-button-failed-color);
             }
             .list {
-                height: 8em;
+                height: 16em;
                 background-color: var(--job-list-background-color);
                 overflow-y: scroll;
             }
@@ -89,6 +89,7 @@
                 <i class$="fas [[ getButtonClass(popupVisibility) ]] button" title="Toggle download list" on-click="toggleJobList"></i>
             </div>
             <div class="status">[[ jobList.length ]] Download(s)</div>
+            <i class$="fas fa-magic [[ getListClass(popupVisibility) ]] bar button" title="Reset all failed download" on-click="resetAllDownloads"></i>
         </div>
     </template>
 
@@ -194,6 +195,16 @@
                 let job = e.model.item;
                 if( job.status === 'failed' || job.status === 'completed' ) {
                     Engine.DownloadManager.addDownload( job.chapter );
+                }
+            }
+
+            resetAllDownloads ( e ) {
+                for (let index in this.jobList){
+                    let job = this.jobList[index]
+                    console.log(job)
+                    if ( job.status === 'failed' ) {
+                        Engine.DownloadManager.addDownload( job.chapter );
+                    }
                 }
             }
 
