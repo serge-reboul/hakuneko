@@ -73,6 +73,10 @@ export default class Connector {
         }
     }
 
+    getMangaUrl( manga ) {
+        return this.url + manga.id
+    }
+    
     /**
      * Find first manga with title that matches the given pattern (case-insensitive).
      */
