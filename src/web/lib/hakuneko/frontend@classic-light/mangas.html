@@ -102,6 +102,13 @@
                     <td width="1">
                         <i class="fas fa-fw fa-download button" on-click="onDownloadMangasClick" title="Click to download all chapters currently available for all mangas shown in the filtered and sorted list"></i>
                     </td>
+                    <template is="dom-if" if="[[ isFolderConnector(selectedConnector) ]]" restamp="false">
+                        <td width="1">
+                            <div class="shrink">
+                                <i class="fas fa-fw fa-folder-open item" title="Browse &hellip;" on-click="clickChooseDirectory"></i>
+                            </div>
+                        </td>
+                    </template>
                 </tr>
             </table>
         </div>
@@ -390,6 +397,26 @@
                     this.onUpdateMangaListClick(evt);
                 }
             }
+
+            /**
+             * Observer will be executed, whenever the 'selectedManga' is changed.
+             */
+             isFolderConnector( connector ) {
+                return ( connector.id === "folder" )
+            }
+
+            /**
+             * 
+             */
+            async clickChooseDirectory(evt) {
+                console.log(this.selectedConnector.config)
+                let path = await Engine.Storage.folderBrowser(this.selectedConnector.config.path.value);
+                if(path) {
+                    this.selectedConnector.config.path.value = path
+                }
+            }
+
+
         }
         window.customElements.define( HakunekoMangas.is, HakunekoMangas );
     </script>
