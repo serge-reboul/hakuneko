@@ -57,6 +57,9 @@ export default class BookmarkConnector {
          */
         let mangas = Engine.BookmarkManager.bookmarks.map( bookmark => {
             let manga = new Manga( this._getConnectorByID( bookmark.key.connector ), bookmark.key.manga, bookmark.title.manga );
+            //if (["hentai3z"].includes(manga.connector.id)){
+            //    manga.title = "zx_" + manga.title
+            //}
             // determine if manga directory exist on disk
             Engine.Storage.mangaDirectoryExist( manga )
                 .then( () => {

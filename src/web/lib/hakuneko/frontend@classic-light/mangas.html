@@ -96,7 +96,7 @@
                     </td>
                     <!--
                     <td width="1">
-                        <i class="fas fa-fw fa-sync button" on-click="UpdateMangaFromEveryConnector" title="Click to sync every connecteor manga list"></i>
+                        <i class="fas fa-fw fa-sync button" on-click="UpdateMangaFromEveryConnector" title="Click to sync every connector manga list"></i>
                     </td>
                     -->
                     <td width="1">
@@ -152,7 +152,7 @@
                     and go to the network tab
                 </li>
             </template>
-            <template is="dom-repeat" items="[[ mangaList ]]" filter="[[ filterMangas(mangaPattern) ]]" rendered-item-count="{{ mangaFilteredCount }}">
+            <template is="dom-repeat" items="[[ reOrderMangaList(mangaList) ]]" filter="[[ filterMangas(mangaPattern) ]]" rendered-item-count="{{ mangaFilteredCount }}">
                 <li class$="manga [[ item.status ]] [[ getMangaClass(selectedManga, item.id) ]]" title$="[[ item.title ]]&#10;[[ item.connector.label ]]" on-click="onMangaClicked">[[ item.title ]]</li>
             </template>
         </ul>
@@ -340,6 +340,22 @@
              */
             getRefreshClass( isUpdating ) {
                 return ( isUpdating ? 'fa-pulse disabled' : '' );
+            }
+
+            /**
+             *
+             */
+             reOrderMangaList( mangaList ) {
+                console.log(mangaList)
+                const zXConnectorIds = ["hentai3z"]
+                var reOrderedMangaList = [...mangaList];
+                reOrderedMangaList.sort( ( a, b ) => {
+                    var titleA = ((zXConnectorIds.includes(a.connector.id)) ? 'zx_' : '' ) + a.title.toLowerCase();
+                    var titleB = ((zXConnectorIds.includes(b.connector.id)) ? 'zx_' : '' ) + b.title.toLowerCase();
+                    return titleA < titleB ? -1 : 1;
+                    //return a.title.toLowerCase() < b.title.toLowerCase() ? -1 : 1;
+                });
+                return reOrderedMangaList;
             }
 
             /**

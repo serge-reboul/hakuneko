@@ -96,9 +96,14 @@
             /**
              *
              */
-             getMangaUrl( manga ) {
+            getMangaUrl( manga ) {
                 console.log(manga)
-                return manga.connector.getMangaUrl(manga)
+                if (manga) {
+                    return manga.connector.getMangaUrl(manga)
+                }
+                else {
+                    return ""
+                }
             }
 
             /**
