@@ -347,7 +347,7 @@
              */
              reOrderMangaList( mangaList ) {
                 console.log(mangaList)
-                const zXConnectorIds = ["hentai3z"]
+                const zXConnectorIds = ["hentai3z", "hentai20"]
                 var reOrderedMangaList = [...mangaList];
                 reOrderedMangaList.sort( ( a, b ) => {
                     var titleA = ((zXConnectorIds.includes(a.connector.id)) ? 'zx_' : '' ) + a.title.toLowerCase();

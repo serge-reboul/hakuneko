@@ -44,6 +44,9 @@ export default class WordPressMadara extends Connector {
             let mangas = await this._getMangasFromPage(page);
             mangas.length > 0 ? mangaList.push(...mangas) : run = false;
         }
+        console.log("_getMangas()")
+        console.log(mangaList)
+        console.log("_getMangas()")
         return mangaList;
     }
 
